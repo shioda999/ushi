@@ -28,7 +28,7 @@ export class Game extends Scene {
     private releaseFlag: boolean = false
     private score: number = 0
     private time: number = 0
-    private background: BackGround
+    //private background: BackGround
     private ushi: Ushi
     private enemys: Enemy[] = []
     private ground: Ground
@@ -38,7 +38,7 @@ export class Game extends Scene {
             this.releaseFlag = true
             Sound.stop("bgm")
         }
-        this.background = new BackGround(container, this.stage)
+        //this.background = new BackGround(container, this.stage)
         const inst = GraphicManager.GetInstance()
         inst.SetLoadedFunc(() => {
             this.ground = new Ground()
@@ -94,7 +94,7 @@ export class Game extends Scene {
         if (GlobalParam.pause_flag) return
         if (this.time % 10 == 0) this.AddScore(1)
         this.key.RenewKeyData()
-        this.background.update()
+        //this.background.update()
         this.obj_update()
         this.update_score_text()
         if (this.countFrame % FPS_UPDATE_FREQ === 0) {
