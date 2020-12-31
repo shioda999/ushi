@@ -8,14 +8,14 @@ import { Ground } from "./Ground";
 import { Sound } from "./Sound";
 const JUMP = 15
 const JUMP_COUNT = 2
-const BUTTON_W = WIDTH / 15
-const BUTTON_H = HEIGHT / 20
+const BUTTON_W = WIDTH / 12
+const BUTTON_H = HEIGHT / 16
 const style = new PIXI.TextStyle({
     fill: [
         "#d6d6d6",
     ],
     fontFamily: "Arial Black",
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: "bold",
     letterSpacing: 2,
     miterLimit: 1,
@@ -61,7 +61,7 @@ export class Ushi {
         button.endFill()
 
         let text = new PIXI.Text("JUMP", style)
-        text.position.set(-58, -28)
+        text.position.set(-text.width * 0.775, -text.height * 1.2)
 
         this.jump_button.addChild(button)
         this.jump_button.addChild(text)
