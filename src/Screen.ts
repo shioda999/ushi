@@ -7,6 +7,7 @@ export class Screen {
     private container: PIXI.Container
     public app: PIXI.Application
     public OnresizeFunctions = []
+    private scale: number = 1.0
     constructor() {
         Sound.set_master_volume(GlobalParam.master_volume)
         this.container = new PIXI.Container()
@@ -15,6 +16,9 @@ export class Screen {
         window.onresize = () => {
             this.OnresizeFunctions.forEach(n => n())
         }
+    }
+    public static get_scale() {
+        return this.instance.scale
     }
     public static init() {
         if (!this.instance)
@@ -38,15 +42,17 @@ export class Screen {
             temp.destroy()
         }
         document.body.appendChild(this.app.view)
+        this.set_scale()
         this.app.stage.width = document.documentElement.clientWidth
         this.app.stage.height = document.documentElement.clientHeight
-        this.container.x = (document.documentElement.clientWidth - WIDTH) / 2
-        this.container.y = (document.documentElement.clientHeight - HEIGHT) / 2
+        this.container.x = (document.documentElement.clientWidth - WIDTH * this.scale) / 2
+        this.container.y = (document.documentElement.clientHeight - HEIGHT * this.scale) / 2
+        this.container.scale.set(this.scale)
 
         const frame = new PIXI.Graphics()
         frame.beginFill(0, 0)
         frame.lineStyle(Math.max(this.container.x, this.container.y), 0x1099bb, 1.0, 1)
-        frame.drawRect(this.container.x, this.container.y, WIDTH, HEIGHT)
+        frame.drawRect(this.container.x, this.container.y, WIDTH * this.scale, HEIGHT * this.scale)
         frame.endFill()
         frame.zIndex = 1
         frame.name = "frame"
@@ -54,6 +60,9 @@ export class Screen {
         this.container.sortableChildren = true
         this.app.stage.addChild(frame)
         this.app.stage.addChild(this.container)
+    }
+    private set_scale() {
+        this.scale = Math.min(document.documentElement.clientWidth / WIDTH, document.documentElement.clientHeight / HEIGHT) - 0.02
     }
     public AddOnresizeFunc(func) {
         this.OnresizeFunctions.push(func)

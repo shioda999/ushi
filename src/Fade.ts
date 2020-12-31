@@ -1,32 +1,35 @@
 import * as PIXI from "pixi.js"
-import {Key} from './key'
-import {WIDTH, HEIGHT} from './global'
-export class Fade{
+import { Key } from './key'
+import { WIDTH, HEIGHT } from './global'
+import { Screen } from './Screen'
+export class Fade {
     private count: number = 0
     private filter
-    constructor(container: PIXI.Container, private callback: () => any){
+    constructor(container: PIXI.Container, private callback: () => any) {
         Key.GetInstance().SetInactive()
         const effect = new PIXI.Container()
-        effect.filterArea = new PIXI.Rectangle(container.x, container.y, WIDTH, HEIGHT);
+        let scale = Screen.get_scale()
+        effect.filterArea = new PIXI.Rectangle(container.x, container.y, WIDTH * scale, HEIGHT * scale);
         container.addChild(effect);
-        try{
+        try {
             this.filter = new PIXI.Filter(null, shaderFrag,
-                {time: 0,
-                len: 800,
-                center_x : container.x + WIDTH / 2,
-                center_y : container.y + HEIGHT / 2
+                {
+                    time: 0,
+                    len: 800,
+                    center_x: container.x + WIDTH / 2,
+                    center_y: container.y + HEIGHT / 2
                 });
             effect.filters = [this.filter];
         }
-        catch{
+        catch {
             alert("GLSLのコードにエラーがあります。")
         }
         this.loop()
     }
     private loop = () => {
         this.filter.uniforms.time += 0.02
-        if(this.count++ < 50)requestAnimationFrame(this.loop)
-        else{
+        if (this.count++ < 50) requestAnimationFrame(this.loop)
+        else {
             Key.GetInstance().SetActive()
             this.callback()
         }
