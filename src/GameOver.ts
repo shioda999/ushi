@@ -65,8 +65,8 @@ export class GameOver {
 
             if (GlobalParam.highScore < GlobalParam.data.score) {
                 GlobalParam.highScore = GlobalParam.data.score
-                save()
             }
+            save()
             const text = new PIXI.Text("High Score : " + GlobalParam.highScore
                 + "\nYour Score : " + GlobalParam.data.score,
                 new PIXI.TextStyle({

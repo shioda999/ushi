@@ -16,7 +16,7 @@ export class ItemManager {
     private click_flag: boolean = false
     constructor(private sx: number, private sy: number, private width: number, private height: number, private container: PIXI.Container,
         private decide: () => any, private cancel: () => any, private anchor_x = 0.5, private anchor_y = 0.5,
-        private sound_decide = "decide", private sound_cancel = "back", private sound_fail = "fail", private bk_color = 0x00004B) {
+        private sound_decide = "decide", private sound_cancel = "back", private sound_fail = "back", private bk_color = 0x00004B) {
         this.key = Key.GetInstance()
     }
     public appendItem = (text: string, size: number, color = [0x000000], bold = false, active = true, bk_color = this.bk_color) => {

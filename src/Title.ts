@@ -63,8 +63,12 @@ export class Title extends Scene {
 
 		this.key = Key.GetInstance()
 		this.key.key_register({ code: ["KeyR"], name: "r" })
+		if (!load()) {
+			container.removeChildren()
+			Sound.play("boo", true, GlobalParam.se_volume)
+			return
+		}
 		this.loopID = setInterval(() => this.loop(), 30)
-		load()
 	}
 	private decide() {
 		switch (this.item_manager.getFocus()) {
@@ -77,6 +81,5 @@ export class Title extends Scene {
 		if (GlobalParam.pause_flag) return
 		this.key.RenewKeyData()
 		this.item_manager.update()
-		if (this.key.IsPress("r")) this.gotoScene("make_stage")
 	}
 }

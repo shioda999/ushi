@@ -16,13 +16,25 @@ export namespace GlobalParam {
 
 export function save() {
     var now = new Date();
-    now.setMonth((now.getMonth() + 3) % 12 + 1);
-    document.cookie = "data=" + encodeURIComponent(JSON.stringify(GlobalParam.highScore)) + ";expires=" + now.toUTCString();
+    const kigen = 60
+    now.setTime(now.getTime() + kigen * 24 * 60 * 60 * 1000);
+
+    let data = { v: GlobalParam.highScore ^ 1502, p: (GlobalParam.highScore + 12543) * 23 % 8096 }
+
+    document.cookie = "data=" + encodeURIComponent(JSON.stringify(data)) + "; expires=" + now.toUTCString();
 }
 export function load() {
     let str = decodeURIComponent(get_cookieVal("data"))
-    if (str == "undefined") return
-    GlobalParam.highScore = JSON.parse(str)
+    if (str == "undefined") return true
+    let data = JSON.parse(str)
+    data.v ^= 1502
+    if ((data.v + 12543) * 23 % 8096 != data.p) {
+        GlobalParam.highScore = 0
+        alert("スコアが不正です")
+        return false
+    }
+    else GlobalParam.highScore = data.v
+    return true
 }
 export function get_cookieVal(key) {
     return ((document.cookie + ';').match(key + '=([^¥S;]*)') || [])[1];
