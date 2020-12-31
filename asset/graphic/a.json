@@ -1,0 +1,27 @@
+{
+			"dropShadow": true,
+			"dropShadowAngle": 0,
+			"dropShadowBlur": 20,
+			"dropShadowColor": "#fffafa",
+			"dropShadowDistance": 0,
+			"fill": [
+				"#0008ff",
+				"#00fffb"
+			],
+			"fillGradientType": 1,
+			"fillGradientStops": [
+				1,
+				0,
+				0
+			],
+			"fontFamily": "Arial Black",
+			"fontSize": 82,
+			"fontStyle": "italic",
+			"fontWeight": "bold",
+			"letterSpacing": 2,
+			"miterLimit": 1,
+			"stroke": "#250033",
+			"padding": 40,
+			"strokeThickness": 17,
+			"textBaseline": "middle"
+		}
