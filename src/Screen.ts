@@ -62,7 +62,8 @@ export class Screen {
         this.app.stage.addChild(this.container)
     }
     private set_scale() {
-        this.scale = Math.min(document.documentElement.clientWidth / WIDTH, document.documentElement.clientHeight / HEIGHT) - 0.02
+        this.scale = Math.min(document.documentElement.clientWidth / WIDTH,
+            (document.documentElement.clientHeight - 10) / HEIGHT) - 0.02
     }
     public AddOnresizeFunc(func) {
         this.OnresizeFunctions.push(func)

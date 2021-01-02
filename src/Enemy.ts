@@ -6,7 +6,6 @@ import { GraphicManager } from './GraphicManager'
 import { Ground } from "./Ground"
 
 export class Enemy {
-    private key: Key
     private x: number = WIDTH + 16
     private y: number = 0
     private vx: number = 0
@@ -15,6 +14,7 @@ export class Enemy {
     private ay: number = 0
     private landing: boolean = false
     private sprite: PIXI.Sprite
+    public flag: boolean = true
     constructor(private ground: Ground) {
         this.y = this.ground.get_groundHeight(this.x)
 
@@ -28,18 +28,9 @@ export class Enemy {
         this.sprite.zIndex = -2
     }
     public update() {
-        this.ay = G
-        this.vx += this.ax
-        this.vy += this.ay
-        this.x += this.vx - SPEED
-        this.y += this.vy
-        if (this.y > this.ground.get_groundHeight(this.x)) {
-            this.landing = true
-            this.y = this.ground.get_groundHeight(this.x)
-            this.vy = 0
-        }
-        else this.landing = false
+        this.x -= SPEED
         this.sprite.position.set(this.x, this.y - this.sprite.height / 2)
+        if (this.x < -SPEED * 3) this.flag = false, this.release()
     }
     public collision(px: number, py: number) {
         return Math.sqrt(Math.pow(this.x - px, 2) + Math.pow(this.y - py, 2)) <= this.sprite.height / 2

@@ -26,25 +26,26 @@ export class Ground {
     private toge_c: number = 0
     private diff: number = 0
     private last_holl_size: number = 0
+    private mount_c: number = 0
     constructor() {
-        this.r = new MyRand(100)
+        this.r = new MyRand(2021)
         this.container = Screen.init().getContainer()
-        for (let i = 0; i <= N + 5; i++) {
+        for (let i = 0; i <= N + 2; i++) {
             this.high.push(HEIGHT * 0.7)
             this.make_ground(HEIGHT * 0.7, HEIGHT * 0.7)
         }
     }
     public update() {
         this.ground.forEach((n) => n.x -= SPEED)
-        let temp = this.ground.filter((n) => n.x < -W * 3)
-        temp.forEach((n) => { this.container.removeChild(n); })
-        this.ground = this.ground.filter((n) => n.x >= -W * 3)
+        let temp = this.ground.filter((n) => n.x < -W)
+        this.ground = this.ground.filter((n) => n.x >= -W)
         for (let i = 0; i < temp.length; i++) {
             this.high = this.high.slice(1)
             this.get_next_height()
         }
         this.time++;
-        if (this.time % 300 == 0) this.diff++
+        if (this.time % 2000 == 0) this.diff++
+        temp.forEach((n) => { this.container.removeChild(n); n.destroy(); n = null; })
     }
     public generate_enemy() {
         if (this.time % (W / SPEED) || this.state == HOLL || this.is_edge()) return false
@@ -62,7 +63,7 @@ export class Ground {
     }
     private is_edge() {
         let id
-        for (id = 0; id < N + 5; id++) {
+        for (id = 0; id < N + 2; id++) {
             if (this.ground[id].x + W > WIDTH + 16 - W * 3 / 2) break
         }
         return this.high[id + 1] == DEPTH
@@ -85,7 +86,12 @@ export class Ground {
                 new_h = Math.max(HEIGHT * 0.1, Math.min(new_h, HEIGHT * 0.9))
                 this.high.push(new_h)
                 this.make_ground(prev_h, new_h)
-                if (this.r.rand() % Math.max(40 - this.diff, 20) == 0 && this.toge_c == 0) this.state = HOLL, this.holl_c = 0
+                if (this.r.rand() % Math.max(18 - this.diff, 5) == 0 && this.toge_c == 0) {
+                    if (this.diff >= 5 && this.r.rand() % 40 == 0) {
+                        this.state = MOUNTAIN
+                    }
+                    else this.state = HOLL, this.holl_c = 0
+                }
                 break
             case HOLL:
                 if (this.holl_c >= 2 && this.r.rand() % Math.min(4, 2 + Math.floor(this.diff / 10)) == 0
@@ -97,25 +103,48 @@ export class Ground {
                 this.high.push(DEPTH)
                 this.make_ground(DEPTH, DEPTH)
                 break
+            case MOUNTAIN:
+                for (let i = this.high.length - 1; i >= 0; i--) {
+                    if (this.high[i] != DEPTH) {
+                        prev_h = this.high[i] + (this.high.length - 1 - i) * (this.r.rand() % 20 - 9)
+                        prev_h = Math.max(HEIGHT * 0.1, Math.min(prev_h, HEIGHT * 0.9))
+                        if (i == this.high.length - 1) this.last_holl_size = 0
+                        break
+                    }
+                }
+                d = inv_Phi(this.r.rand() % 1000 / 1000) * 20
+                new_h = prev_h + d
+                new_h = Math.max(HEIGHT * 0.1, Math.min(new_h, HEIGHT * 0.9))
+                this.high.push(new_h)
+                this.make_ground(prev_h, new_h)
+                this.mount_c++
+                if (this.mount_c >= 60 && this.mount_c % 10 == 0 && this.r.rand() % 5 == 0) {
+                    this.state = NORMAL
+                    this.mount_c = 0
+                }
+                break
         }
     }
     private make_ground(h1: number, h2: number) {
         let x: number
         if (this.ground.length == 0) x = 0
         else x = this.ground[this.ground.length - 1].x + W
-        const g = new PIXI.Graphics()
-        g.beginFill(0x666600, 0.8)
+        let g = new PIXI.Graphics()
+        h1 = Math.min(HEIGHT, h1)
+        h2 = Math.min(HEIGHT, h2)
+        g.beginFill(0x525200, 1)
         g.drawPolygon([0, h1, 0, HEIGHT, W, HEIGHT, W, h2])
         g.endFill()
         g.x = x
         g.zIndex = -1
         this.ground.push(g)
         this.container.addChild(g)
+        g = null
     }
     public get_groundHeight(x: number) {
         let id: number
         x -= W * 3 / 2
-        for (id = 0; id < N + 5; id++) {
+        for (id = 0; id < N + 2; id++) {
             if (this.ground[id].x + W > x) break
         }
         let _x = this.ground[id].x

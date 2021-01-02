@@ -70,6 +70,9 @@ export class Game extends Scene {
             this.gameover()
             this.releaseFlag = true
         }
+        let k = this.enemys.filter(n => !n.flag)
+        this.enemys = this.enemys.filter(n => n.flag)
+        k.forEach(n => n = null)
     }
     private check_collision() {
         let px = this.ushi.getx(), py = this.ushi.gety()
@@ -116,22 +119,24 @@ export class Game extends Scene {
         return Math.round(value * base) / base;
     }
     private updateFPS(delta: number) {
-        this.fpsContainer.removeChildren()
-        if (this.fpsText) this.fpsText.destroy()
-        if (this.fpsBox) this.fpsBox.destroy()
+        if (this.fpsText) {
+            this.fpsContainer.removeChild(this.fpsText)
+            this.fpsText.destroy()
+        }
         this.fpsText = new PIXI.Text("FPS:" + this.orgRound(1000 * FPS_UPDATE_FREQ / delta, 100).toFixed(2), {
             fontFamily: "Arial", fontSize: WIDTH / 30, fill: 0xdddddd
         })
-        this.fpsBox = new PIXI.Graphics()
-        this.fpsBox.lineStyle(2, 0xcccccc, 1, 1.0)
-        this.fpsBox.beginFill(0x0000ff, 0.3)
-        this.fpsBox.drawRect(0, 0, this.fpsText.width, this.fpsText.height)
-        this.fpsBox.endFill()
-        this.fpsContainer.addChild(this.fpsBox)
-
+        if (!this.fpsBox) {
+            this.fpsBox = new PIXI.Graphics()
+            this.fpsBox.lineStyle(2, 0xcccccc, 1, 1.0)
+            this.fpsBox.beginFill(0x0000ff, 0.3)
+            this.fpsBox.drawRect(0, 0, this.fpsText.width, this.fpsText.height)
+            this.fpsBox.endFill()
+            this.fpsContainer.addChild(this.fpsBox)
+            this.fpsContainer.x = WIDTH - this.fpsText.width - 3
+            this.fpsContainer.y = 3
+        }
         this.fpsContainer.addChild(this.fpsText)
-        this.fpsContainer.x = WIDTH - this.fpsText.width - 3
-        this.fpsContainer.y = 3
     }
     private initFpsContainer() {
         this.fpsContainer = new PIXI.Container()
@@ -140,6 +145,9 @@ export class Game extends Scene {
     }
     private update_score_text() {
         this.container.removeChild(this.score_text)
+        if (this.score_text) {
+            this.score_text.destroy()
+        }
         this.score_text = new PIXI.Text(" score : " + this.score, text_style)
         this.score_text.position.set(0, HEIGHT)
         this.score_text.anchor.x = 0
