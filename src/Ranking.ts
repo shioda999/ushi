@@ -1,9 +1,9 @@
 import * as PIXI from "pixi.js"
-import { Scene } from './Scene';
 import { WIDTH, HEIGHT, GlobalParam, save } from './global'
 import { Key } from './key'
 import { Sound } from './Sound'
 import { ItemManager } from "./ItemManager";
+import { Screen } from 'Screen'
 const FPS_UPDATE_FREQ = 20
 const style = new PIXI.TextStyle({
     align: "center",
@@ -30,20 +30,16 @@ const style = new PIXI.TextStyle({
     strokeThickness: 12,
     whiteSpace: "normal"
 });
-export class GameOver {
-    private item_manager: ItemManager
-    private text: PIXI.Text
+export class Ranking {
     private count: number
-    private releaseFlag: boolean = false
-    private score_text: PIXI.Text
-    constructor(private container: PIXI.Container, private func: () => any) {
-        this.text = new PIXI.Text("Game Over", style)
-        this.text.anchor.set(0.5)
-        this.text.position.set(WIDTH / 2, HEIGHT / 2)
-        container.addChild(this.text)
-        this.count = 0
-        this.loop()
-        Sound.play("over", true, GlobalParam.bgm_volume * 1.2)
+    private releaseFlag: boolean
+    private text: PIXI.Text
+    private graphic: PIXI.Graphics
+    private container: PIXI.Container
+    constructor(private data: any) {
+        this.container = Screen.init().
+            this.graphic = new PIXI.Graphics()
+
     }
     private loop = () => {
         if (this.releaseFlag) return
@@ -101,7 +97,7 @@ export class GameOver {
     }
     public release() {
         this.item_manager.delete()
-        this.container.removeChild(this.text)
+        this.container.removeChild(this.graphic)
         this.container.removeChild(this.score_text)
     }
 }

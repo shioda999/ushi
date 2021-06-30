@@ -28,6 +28,7 @@ export class SceneManager {
         this.key = Key.GetInstance()
         this.key.key_register({ code: ["Enter", "PadA"], name: "decide" })
         this.key.key_register({ code: ["Backspace", "PadB"], name: "cancel" })
+        this.key.key_register({ code: ["r"], name: "r" })
         this.gotoScene("title")
     }
     public static init(container: PIXI.Container) {

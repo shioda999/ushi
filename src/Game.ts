@@ -5,7 +5,6 @@ import { Key } from './key'
 import { Ushi } from './Ushi'
 import { GraphicManager } from './GraphicManager'
 import { Sound } from './Sound'
-import { BackGround } from "./BackGround";
 import { Enemy } from "./Enemy";
 import { GameOver } from './GameOver'
 import { Ground } from "./Ground";
@@ -84,11 +83,20 @@ export class Game extends Scene {
     }
     private gameover() {
         GlobalParam.data.score = this.score
-        new GameOver(this.container, () => {
+        let inst = new GameOver(this.container, () => {
             Sound.stop("all")
             Sound.play("decide", false, GlobalParam.se_volume)
-            this.exitCurrentScene()
-            this.gotoScene("title")
+            if (this.key.IsPress_Now("r")) {
+                this.ushi.release()
+                this.ushi = new Ushi(this.ground)
+                this.releaseFlag = false
+                this.loop()
+                inst.release()
+            }
+            else {
+                this.exitCurrentScene()
+                this.gotoScene("title")
+            }
         })
     }
     private loop = () => {

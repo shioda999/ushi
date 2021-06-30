@@ -44,7 +44,7 @@ export class Ground {
             this.get_next_height()
         }
         this.time++;
-        if (this.time % 2000 == 0) this.diff++
+        if (this.time % 1500 == 0) this.diff++
         temp.forEach((n) => { this.container.removeChild(n); n.destroy(); n = null; })
     }
     public generate_enemy() {
@@ -112,13 +112,13 @@ export class Ground {
                         break
                     }
                 }
-                d = inv_Phi(this.r.rand() % 1000 / 1000) * 20
+                d = inv_Phi(this.r.rand() % 1000 / 1000) * 25
                 new_h = prev_h + d
                 new_h = Math.max(HEIGHT * 0.1, Math.min(new_h, HEIGHT * 0.9))
                 this.high.push(new_h)
                 this.make_ground(prev_h, new_h)
                 this.mount_c++
-                if (this.mount_c >= 60 && this.mount_c % 10 == 0 && this.r.rand() % 5 == 0) {
+                if (this.mount_c >= 60 && this.mount_c % 10 == 0 && this.r.rand() % 10 == 0) {
                     this.state = NORMAL
                     this.mount_c = 0
                 }
